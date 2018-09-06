@@ -1,0 +1,24 @@
+<% include header %>
+<div class="pt-5 col-md-6 mx-auto">
+    <div class="card">
+        <div class="card-header">
+            <h3>Send confirmation email</h3>
+            <h5 class="card-subtitle text-muted"><%= text %></h5>
+        </div>
+        <div class="card-body">
+            <form action="<%= path %>" method="post">
+                <label for="email">Email:</label>
+                <div class="form-group">
+                    <input class="form-control form-control-lg" type="email"
+                        name="email" id="email"
+                        pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-z]{2,3}$"
+                        title="Enter a valid email address" required>
+                </div>
+                <div class="form-group">
+                    <input class="btn btn-primary btn-block" type="submit" value="Send">
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<% include footer %>

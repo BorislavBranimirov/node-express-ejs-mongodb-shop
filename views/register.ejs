@@ -1,0 +1,80 @@
+<% include header %>
+<div class="pt-5 col-md-6 mx-auto">
+    <div class="card">
+        <div class="card-header">
+            <h3 class="mb-0">Register page</h3>
+        </div>
+        <div class="card-body">
+            <form action="/register" method="post">
+                <label for="username">Username:</label> <span class="text-muted" id="status"></span>
+                <div class="form-group">
+                    <input class="form-control form-control-lg" type="text" name="username" id="username" 
+                        pattern="[a-zA-Z0-9_]{6,25}"
+                        title="Minimum of 6 characters and no spaces" 
+                        <% if (formData) {%>
+                            value="<%= formData.username %>"
+                        <% } %>
+                        required>
+                </div>
+    
+                <label for="password">Password:</label>
+                <div class="form-group">
+                    <input class="form-control form-control-lg" type="password" name="password" id="password"
+                        pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$" 
+                        title="Minimum of 8 characters, one lowercase letter,one uppercase letter and a number"
+                        <% if (formData) {%>
+                            value="<%= formData.password %>"
+                        <% } %>
+                        required>
+                </div>
+    
+                <label for="email">Email:</label>
+                <div class="form-group">
+                    <input class="form-control form-control-lg" type="email" name="email" id="email"
+                        pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-z]{2,3}$"
+                        title="Enter a valid email address"
+                        <% if (formData) {%>
+                            value="<%= formData.email %>"
+                        <% } %>
+                        required>
+                </div>
+    
+                <label for="realName">Name:</label>
+                <div class="form-group">
+                    <input class="form-control form-control-lg" type="text" name="realName" id="realName"
+                        pattern="[a-zA-Z\s]+" title="Only letters and spaces allowed"
+                        <% if (formData) {%>
+                            value="<%= formData.realName %>"
+                        <% } %>
+                        required>
+                </div>
+    
+                <div class="small text-dark">
+                    <p>
+                        Already have an account?
+                        <a href="/login">Login here</a>
+                    </p>
+                </div>
+    
+                <div class="form-group">
+                    <input class="btn btn-primary btn-block" type="submit" value="Register">
+                </div>
+            </form>
+        </div>
+    </div>
+</div> 
+
+<script>
+    document.getElementById("username").addEventListener("blur", function (event) {
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function () {
+            if (this.readyState == 4 && this.status == 200) {
+                document.getElementById("status").innerHTML = xhttp.responseText;
+            }
+        };
+        xhttp.open("GET", "/isUsernameAvailable?username=" + this.value, true);
+        xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xhttp.send();
+    });
+</script>
+<% include footer %>

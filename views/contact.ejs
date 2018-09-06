@@ -1,0 +1,43 @@
+<% include header %>
+<div class="card">
+    <div class="card-header">
+        <h3>Contact Page</h3>
+        <h5 class="card-subtitle text-muted">
+            If you have any questions, there's a feature you want us to implement 
+            or you want to report a bug use the form below to contact us.
+        </h5>
+    </div>
+    <div class="card-body">
+        <form action="/contact" method="post">
+            <label for="realName">Name:</label>
+            <div class="form-group">
+                <input class="form-control form-control-lg" type="text" name="realName" id="realName"
+                    pattern="[a-zA-Z\s]+" title="Only letters and spaces allowed" required>
+            </div>
+
+            <label for="email">Email:</label>
+            <div class="form-group">
+                <input class="form-control form-control-lg" type="email" name="email" id="email"
+                    pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-z]{2,3}$" title="Enter a valid email address"
+                required>
+            </div>
+
+            <label for="subject">Message subject:</label>
+            <div class="form-group">
+                <input class="form-control form-control-lg" type="text"
+                    name="subject" id="subject" required>
+            </div>
+
+            <label for="message">Message description:</label>
+            <div class="form-group">
+                <textarea class="form-control form-control-lg" name="message" id="message"
+                    rows="6" cols="50" style="overflow:auto; resize:none"></textarea>
+            </div>
+
+            <div class="form-group">
+                <input class="btn btn-primary btn-block" type="submit" value="Send email">
+            </div>
+        </form>
+    </div>
+</div>
+<% include footer %>

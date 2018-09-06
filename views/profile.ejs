@@ -1,0 +1,106 @@
+<% include header %>
+<div class="pt-5 col-md-6 mx-auto">
+    <div class="card">
+        <div class="card-header">
+            <div class="row">
+                <div class="col-4">
+                    <h3><%= user.username %></h3>
+                    <h5 class="card-subtitle text-muted">Logged in</h5>
+                </div>
+                <div class="col text-right my-auto">
+                    <form action="/user/logout" method="post">
+                        <button class="btn btn-primary btn-lg" type="submit">
+                            <i class="fas fa-sign-out-alt"></i>&nbsp;Log out
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="row py-1">
+                <div class="col-2">
+                    Email:
+                </div>
+                <div class="col">
+                    <%= user.email %>
+                </div>
+                <div class="col-2">
+                    <a href="/user/changeEmail"><i class="fas fa-edit"></i>&nbsp;Edit</a>
+                </div>
+            </div>
+            <div class="row py-1">
+                <div class="col-2">
+                    Name:
+                </div>
+                <div class="col">
+                    <%= user.realName %>
+                </div>
+                <div class="col-2">
+                    <a href="/user/changeName"><i class="fas fa-edit"></i>&nbsp;Edit</a>
+                </div>
+            </div>
+            <div class="row py-1">
+                <div class="col-2">
+                    Password:
+                </div>
+                <div class="col">
+                </div>
+                <div class="col-2">
+                    <a href="/user/changePass"><i class="fas fa-edit"></i>&nbsp;Edit</a>
+                </div>
+            </div>
+            <div class="row py-1">
+                <div class="col-2">
+                    Past orders:
+                </div>
+                <div class="col">
+                </div>
+                <div class="col-2">
+                        <a href="/user/<%= user.username %>/pastOrders"><i class="fas fa-eye"></i>&nbsp;View</a>
+                </div>
+            </div>
+            <hr>
+            <% if (user.role === "admin") { %>
+                <div class="row py-1">
+                    <div class="col-3">
+                        Item:
+                    </div>
+                    <div class="col">
+                    </div>
+                    <div class="col-2">
+                        <a href="/admin/add"><i class="fas fa-plus-square"></i>&nbsp;Add</a>
+                    </div>
+                    <div class="col-2">
+                        <a href="/admin/edit"><i class="fas fa-edit"></i>&nbsp;Edit</a>
+                    </div>
+                </div>
+                <div class="row py-1">
+                    <div class="col-3">
+                        User orders:
+                    </div>
+                    <div class="col">
+                    </div>
+                    <div class="col-2">
+                        <a href="/admin/orders"><i class="fas fa-eye"></i>&nbsp;View</a>
+                    </div>
+                </div>
+                <hr>
+            <% } %>
+            <div class="row">
+                <div class="col-6">
+                    <form action="/user/deactivate?_method=patch" method="post"
+                        onsubmit="return confirm('Are you sure you want to deactivate your account?')">
+                            <input class="form-control btn btn-primary btn-block" type="submit" value="Deactivate account">
+                    </form>
+                </div>
+                <div class="col-6">
+                    <form action="/user/delete?_method=patch" method="post"
+                        onsubmit="return confirm('Are you sure you want to delete your account?')">
+                            <input class="form-control btn btn-primary" type="submit" value="Delete account">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<% include footer %>

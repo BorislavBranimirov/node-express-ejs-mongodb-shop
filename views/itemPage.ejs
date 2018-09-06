@@ -1,0 +1,183 @@
+<% include header %>
+<div class="container-fluid">
+    <div class="row">
+        <nav class="col-12 col-lg-2 py-3">
+            <form action="/itempage" method="GET">
+                <input type="text" name="page"
+                value="<%= filterObject.page %>" hidden="true">
+
+                <div class="form-group">
+                        <input class="form-control" type="text" name="search" id="search"
+                            placeholder="Search..." value="<%= filterObject.search %>">
+                </div>
+
+                <label class="text-muted" for="count">Number of items per page:</label>
+                <div class="form-group">
+                    <input class="form-control" type="number" name="count" id="count"
+                        value="<%= filterObject.count %>" min="1">
+                </div>
+
+                <label class="text-muted" for="priceMin">Price:</label>
+                <div class="form-group px-3">
+                    <div class="row">
+                        <input class="form-control col-9" type="range" name="priceMin" id="priceMin"
+                            value="<%= filterObject.priceMin %>" step="0.1"
+                            min="<%= defaults.priceMin %>" max="<%= defaults.priceMax %>"
+                            oninput="printSliderValue(this.value, document.getElementById('priceMinText'))">
+                        <input class="form-control col-3" type="text" id="priceMinText" value="<%= filterObject.priceMin %>" 
+                            onchange="changeSliderValue(this.value, document.getElementById('priceMin'))">
+    
+                    </div>
+                </div>
+                <label class="text-muted" for="priceMax">to:</label>
+                <div class="form-group px-3">
+                    <div class="row">
+                        <input class="form-control col-9" type="range" name="priceMax" id="priceMax"
+                            value="<%= filterObject.priceMax %>" step="0.1"
+                            min="<%= defaults.priceMin %>" max="<%= defaults.priceMax %>"
+                            oninput="printSliderValue(this.value, document.getElementById('priceMaxText'))">
+                        <input class="form-control col-3" type="text" id="priceMaxText" value="<%= filterObject.priceMax %>"
+                                onchange="changeSliderValue(this.value, document.getElementById('priceMax'))">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <input class="form-control" type="submit" value="Filter">
+                </div>
+            </form>
+        </nav>
+    <% if (itemArray) { %>
+        <div class="container col-12 col-lg-10">
+            <div class="row">
+                <% for(let i = 0; i < itemArray.length; i++) { %>
+                    <div class="col-sm-6 col-md-4 col-lg-3 py-3">
+                        <div class="card h-100">
+                            <img class="card-img-top"
+                                src="<%= '/img/' + itemArray[i].itemName.toLowerCase() + '.jpeg' %>"
+                                alt="<%= itemArray[i].itemName %>">
+                            <div class="card-body text-center d-flex flex-column">
+                                <a href="/item/<%= itemArray[i]._id %>/<%= itemArray[i].itemName %>">
+                                    <h2 class="card-title"><%= itemArray[i].itemName %></h2>
+                                </a>
+                                <p class="card-text">
+                                    <%= itemArray[i].description %>
+                                </p>
+                                <div class="mt-auto">
+                                    <p class="card-text">
+                                        <%= itemArray[i].fullPrice %> <br>
+                                        In stock: <%= (itemArray[i].inStock) ? "yes" : "no" %> <br>
+                                    </p>
+                                    <form action="/item/<%= itemArray[i]._id %>/<%= itemArray[i].itemName %>?_method=patch" method="post">
+                                        <div class="form-group">
+                                            <input class="form-control quantity" type="number" name="quantity" min="1" value="1">
+                                        </div>
+                                        <div class="form-group">
+                                            <input class="btn btn-primary" type="submit" value="Add to cart">
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                <% } %>
+            </div>
+        </div>
+    <% } %>
+    </div>
+</div>
+<nav aria-label="Page navigation example">
+    <ul class="pagination justify-content-center">
+        <li class="page-item">
+            <a class="page-link" data-page-control="-1" href="#">
+                <i class="text-dark fas fa-angle-double-left"></i>
+            </a>
+        </li>
+        <% for (let i = 0; i < pagesArray.length; i++) { %>
+            <% if (pagesArray[i] === "") { %>
+                <li class="page-item disabled">
+                    <a class="page-link">&hellip;</a>
+                </li>
+            <% } else { %>
+                <% if (filterObject.page === i + 1) { %>
+                    <li class="page-item active">
+                        <a class="page-link" data-page="<%= pagesArray[i] %>"><%= pagesArray[i] %></a>
+                    </li>
+                <% } else { %>
+                    <li class="page-item">
+                        <a class="page-link" data-page="<%= pagesArray[i] %>"><%= pagesArray[i] %></a>
+                    </li>
+                <% } %>
+            <% } %>
+        <% } %>
+        <li class="page-item">
+            <a class="page-link" data-page-control="1"><i class="fas fa-angle-double-right"></i></a>
+        </li>
+    </ul>
+</nav>
+
+<script>
+    /**
+     * Print slider's value on another element
+     * @param {string} sliderValue
+     * @param {Object} printElement - the element whose value to assign sliderValue to
+     */
+    function printSliderValue(sliderValue, printElement) {
+        printElement.value = sliderValue;
+    }
+
+    /**
+     * Print element's value on a slider
+     * @param {string} sliderTextValue
+     * @param {Object} sliderElement
+     */
+    function changeSliderValue(sliderTextValue, sliderElement) {
+        sliderTextValue = Number(sliderTextValue);
+        //update value only if sliderTextValue is a valid number
+        if(!isNaN(sliderTextValue) && isFinite(sliderTextValue)) {
+            sliderElement.value = sliderTextValue;
+        } else {
+            return;
+        }
+    }
+
+    /**
+     * Send to proper link on pagination click
+     */
+    document.addEventListener("click", function (event) {
+        //if target and target's parent(in the case of icon inside link) isn't a page link return
+        if (!event.target.classList.contains("page-link") && !event.target.parentNode.classList.contains("page-link")) return;
+
+        //target = make sure we are working with the right element
+        //if icon is clicked get the parentNode(the link), else its the link itself
+        let target;
+        if (event.target.tagName === "I") {
+            target = event.target.parentNode;
+        } else {
+            target = event.target;
+        }
+
+        event.preventDefault();
+
+        //split the query string [0]-path, [1]-query (unescaped to preserve apmbersand symbol)
+        let url = "<%- queryString %>".split("?");
+
+        //buttons like next and previous have special dataset attributes
+        //have them set current page +1 or -1 etc
+        //normal page links assign exact page number
+        let page;
+        
+        if (target.dataset.pageControl) {
+            page = Number("<%= filterObject.page %>") + Number(target.dataset.pageControl);
+            if (page < 1 || page > Number("<%= numberOfPages %>")) {
+                    page = Number("<%= filterObject.page %>");
+            }
+        } else {
+            page = target.dataset.page;
+        }
+        
+        url = url[0] + "?" + url[1].replace(/(page=)\d+/, "$1" + page);
+        
+        window.location = url;
+    });
+</script>
+<% include footer %>

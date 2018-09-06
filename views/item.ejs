@@ -1,0 +1,31 @@
+<% include header %>
+
+<div class="pt-5 col-md-6 mx-auto">
+    <div class="card">
+        <div class="card-header">
+            <h3><%= item.itemName %></h3>
+        </div>
+    <div class="row">
+        <img class="item-image col-md-6 item-picture" src="<%= '/img/' + item.itemName.toLowerCase() + '.jpeg' %>"
+            alt="<%= item.itemName %>"> <br>
+        <div class="col-md-6 d-flex flex-column pt-2 pr-5">
+            <%= item.description %><br>
+            <p class="mt-auto">
+                <%= item.fullPrice %> <br>
+                <%= (item.inStock) ? "In stock" : "Out of stock" %>
+            </p>
+        
+            <form action="/item/<%= item._id %>/<%= encodeURI(item.itemName) %>?_method=patch" method="post">
+                <div class="form-group">
+                    <input type="number" name="quantity" id="quantity" min="1" value="1">
+                </div>
+        
+                <div class="form-group">
+                    <input type="submit" value="Add to cart">
+                </div>
+            </form>
+        </div>
+    </div>
+    </div>
+</div>
+<% include footer %>

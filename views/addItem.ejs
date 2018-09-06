@@ -1,0 +1,62 @@
+<% include header %>
+<div class="col-md-6 mx-auto">
+    <div class="card">
+        <div class="card-header">
+            <h3 class="mb-0">Add item</h3>
+        </div>
+        <div class="card-body">
+            <form action="/admin/add" method="post">
+                <label for="itemName">Name:</label>
+                <div class="form-group">
+                    <input class="form-control form-control-lg" type="text" name="itemName" id="itemName" 
+                        <% if (formData) { %>
+                            value="<%= formData.itemName %>"
+                        <% } %>
+                        required>
+                </div>
+
+                <label for="description">Description:</label>
+                <!--html adds white space to textarea otherwise, not sure how to fix-->
+                <div class="form-group">
+                    <textarea class="form-control form-control-lg"
+                        name="description" id="description" rows="6" cols="50"
+                        style="overflow:auto; resize:none"><%_ if (formData) { -%><%= formData.description %><% } -%></textarea>
+                </div>
+
+                <label for="price">Price</label>
+                <div class="row">
+                    <div class="form-group col-12 col-sm-6">
+                        <input class="form-control form-control-lg" type="text" name="price" id="price" 
+                            pattern="^\d+(\.\d{1,2})?$" title="Input correct price, e.g. 9.99"
+                            <% if (formData) { %>
+                                value="<%= formData.price %>"
+                            <% } %>
+                            required>
+                    </div>
+
+                    <div class="form-group input-group col-12 col-sm-6">
+                        <div class="input-group-prepend">
+                                <div class="input-group-text">/</div>
+                        </div>
+                        <input class="form-control form-control-lg" list="pricePerList" name="pricePer" id="pricePer"
+                            autocomplete="off" pattern="^(each|kg|litre)$" title="each/kg/litre"
+                        <% if (formData) { %>
+                            value="<%= formData.pricePer %>"
+                        <% } %>
+                        required>
+                        <datalist id="pricePerList">
+                            <option value="kg">
+                            <option value="litre">
+                            <option value="each">
+                        </datalist>
+                    </div>
+                </div>
+
+            <div class="form-group">
+                <input class="btn btn-primary btn-block" type="submit" value="Add item">
+            </div>
+            </form>
+        </div>
+    </div>
+</div>
+<% include footer %>

@@ -1,0 +1,27 @@
+<% include header %>
+
+<div class="col-10 mx-auto mt-3">
+    <div class="card">
+        <div class="card-header">
+                <h3>Checkout</h3>
+        </div>
+        <div class="card-body pb-0">
+            <p>
+                You successfully sent your order of:<br>
+                <% for (let i = 0; i < sentItems.length - 1; i++) { %>
+                    <%= sentItems[i].itemName %> x<%= sentItems[i].quantity %>, 
+                <% } %>
+                    <%= sentItems[sentItems.length - 1].itemName %> x<%= sentItems[sentItems.length - 1].quantity %>
+                <hr>
+                <% if (outOfStockNames.length > 0) { %>
+                    The following items were out of stock, and therefore not placed on the order:<br>
+                    <% for (let i = 0; i < outOfStockNames.length; i++) { %>
+                        <%= outOfStockNames[i] %>
+                    <% } %>
+                <% } %>
+            </p>
+        </div>
+    </div>
+</div>
+
+<% include footer %>

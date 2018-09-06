@@ -1,0 +1,109 @@
+<% include header %>
+<div class="col-md-6 mx-auto">
+    <div class="card">
+        <div class="card-header">
+            <h3 class="mb-0">Edit item</h3>
+        </div>
+        <div class="card-body">
+            <form action="/admin/edit?_method=patch" method="post">
+                <label for="itemName">Name:</label>
+                <div class="form-group">
+                    <input class="form-control form-control-lg" list="itemNameList"
+                        id="itemName" name="itemName" autocomplete="off" 
+                        <% if (formData) { %>
+                            value="<%= formData.itemName %>"
+                        <% } %>
+                        required>
+                    <datalist id="itemNameList">
+                        <% if (itemArray) { %>
+                            <% for(let i = 0; i < itemArray.length; i++) { %>
+                                <option
+                                    value="<%= itemArray[i].itemName %>"
+                                >
+                                <% } %>
+                            <% } %>
+                    </datalist>
+                </div>
+
+                <label for="description">Description:</label>
+                <!--html adds white space to textarea otherwise, not sure how to fix-->
+                <div class="form-group">
+                    <textarea class="form-control form-control-lg"
+                        name="description" id="description" rows="6" cols="50"
+                        style="overflow:auto; resize:none"><%_ if (formData) { -%><%= formData.description %><% } -%></textarea>
+                </div>
+
+                <label for="price">Price</label>
+                <div class="row">
+                    <div class="form-group col-12 col-sm-6">
+                        <input class="form-control form-control-lg" type="text" name="price" id="price" 
+                        pattern="^\d+(\.\d{1,2})?$" title="Input correct price, e.g. 9.99"
+                        <% if (formData) { %>
+                            value="<%= formData.price %>"
+                        <% } %>
+                        required>
+                    </div>
+
+                    <div class="form-group input-group col-12 col-sm-6">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text">/</div>
+                        </div>
+                        <input class="form-control form-control-lg" list="pricePerList" name="pricePer" id="pricePer"
+                            autocomplete="off" pattern="^(each|kg|litre)$" title="each/kg/litre"
+                            <% if (formData) { %>
+                                value="<%= formData.pricePer %>"
+                            <% } %>
+                            required>
+                        <datalist id="pricePerList">
+                            <option value="each">
+                            <option value="kg">
+                            <option value="litre">
+                        </datalist>
+                    </div>
+                </div>
+
+                <div class="form-check form-group">
+                    <input class="form-check-input" type="checkbox" name="inStock" id="inStock"
+                        <% if (formData) { %>
+                            <% if (formData.inStock) { %>
+                                checked="checked"
+                            <% } %>
+                        <% } %> >
+                    <label class="form-check-label" for="inStock">In stock</label>
+                </div>
+
+                <div class="form-group">
+                    <input class="btn btn-primary btn-block" type="submit" value="Edit item">
+                </div>
+            </form>
+
+            <form action="/admin/edit?_method=delete" method="post">
+                <input type="text" name="deleteItemName" id="deleteItemName" hidden="true">
+                <input class="btn btn-dark btn-block" type="submit" value="Delete item">
+            </form>
+        </div>
+    </div>
+</div>
+
+<script> 
+    document.getElementById("itemName").addEventListener(
+        "blur", function() {
+            //have to use single quotes
+            let itemArray = '<%- JSON.stringify(itemArray) %>';
+            itemArray = JSON.parse(itemArray);
+            //check if there's already an item with this itemName regardless of capitalisation
+            var regex = new RegExp(["^", this.value, "$"].join(""), "i");
+            for (let i = 0; i < itemArray.length; i++) {
+                if (regex.test(itemArray[i].itemName)) {
+                    document.getElementById("description").value = itemArray[i].description;
+                    document.getElementById("price").value = itemArray[i].price / 100;
+                    document.getElementById("pricePer").value = itemArray[i].pricePer.substring(1);
+                    document.getElementById("inStock").checked = (itemArray[i].inStock) ? "checked" : "";
+                }
+            }
+            //populate delete input
+            document.getElementById("deleteItemName").value = this.value;
+        }
+    );
+</script>
+<% include footer %>

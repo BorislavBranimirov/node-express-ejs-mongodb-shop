@@ -1,0 +1,87 @@
+<% include header %>
+<div class="col-10  mx-auto mt-3">
+    <div class="card">
+        <div class="card-header">
+                <h3>Cart</h3>
+        </div>
+        <div class="container-flexible table-responsive">
+            <table class="table table-bordered col-12 mx-auto text-center">
+                <thead class="thead-light">
+                    <tr>
+                    <th>Item name</th>
+                    <th>Item price</th>
+                    <th>Total</th>
+                    <th>Quantity</th>
+                    <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                <% var total = 0; %>
+                <% for (let i=0; i < itemObjectArray.length; i++) { %>
+                    <% if (itemObjectArray[i].item.inStock) { %>
+                        <% total += itemObjectArray[i].item.price * itemObjectArray[i].quantity %>
+                    <% } %>
+                    <tr>
+                        <td class="py-3">
+                            <a class="py-auto"  href="/item/<%= itemObjectArray[i].item._id %>/<%= encodeURI(itemObjectArray[i].item.itemName) %>">
+                            <%= itemObjectArray[i].item.itemName %></a>
+                        </td>
+                        <td class="py-3">
+                            <%= itemObjectArray[i].item.fullPrice %>
+                        </td>
+                        <td class="py-3">
+                            <% if (itemObjectArray[i].item.inStock) { %>
+                                <%= (itemObjectArray[i].item.price * itemObjectArray[i].quantity).toFixed(2) %>
+                            <% } %>
+                        </td>
+                        <td>
+                            <% if (itemObjectArray[i].item.inStock) { %>
+                                <% let quantityFormUrl = "/item/" + itemObjectArray[i].item._id + "/" +
+                                    encodeURI(itemObjectArray[i].item.itemName) + "/quantity?_method=patch"; %>
+                                <form 
+                                    action="<%= quantityFormUrl %>"
+                                    method="post">
+                                    <input type="number" class="form-control quantity-btn" min="1" 
+                                        name="quantity" value="<%= itemObjectArray[i].quantity %>">
+                                </form>
+                            <% } else { %>
+                                <p>Item is out of stock and wont be added to the sent order.</p>
+                            <% } %>
+                        </td>
+                        <td>
+                            <form action="/user/removeItem?_method=delete" method="post">
+                                <input type="text" name="itemId" class="itemId-btn"
+                                    value="<%= itemObjectArray[i].item._id %>" hidden="true">
+                                <input class="btn btn-dark btn-block" type="submit" class="delete-btn" value="Delete">
+                            </form>
+                        </td>
+                    </tr>
+                <% } %>
+                </tbody>
+            </table>
+            <div class="card-body pt-0">
+                <h5>Total: <%= total.toFixed(2) %></h5>
+                <hr>
+                <form action="/user/cart?_method=delete" method="post">
+                    <div class="form-group">
+                        <input  class="btn btn-dark btn-block" type="submit" value="Clear cart">
+                    </div>
+                </form>
+                <form action="/user/checkout?_method=patch" method="post">
+                    <input class="btn btn-primary btn-block" type="submit" value="Send order">
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    document.addEventListener("change", function (event) {
+        if (!event.target.classList.contains("quantity-btn")) return;
+        //dont run if input is not integer
+        if (!(/^\d+$/.test(event.target.value))) return;
+        
+        //submit form element, closest("form") is not supported in IE
+        event.target.parentNode.submit();
+    });
+</script>
+<% include footer %>

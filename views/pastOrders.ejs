@@ -1,0 +1,27 @@
+<% include header %>
+
+<% if(history._userId) { %>
+    <% for (let i = 0; i < history.orders.length; i++) { %>
+        <div class="col-12  mx-auto mt-3">
+            <div class="card">
+                <div class="card-header">
+                    <h3>Order</h3>
+                    <h5 class="card-subtitle text-muted">
+                        <%= history.orders[i].date %>
+                    </h5>
+                </div>
+                <ul class="list-group list-group-flush">
+                    <% for (let j = 0; j < history.orders[i].items.length; j++) { %>
+                        <li class="list-group-item">
+                            <%= history.orders[i].items[j].itemName %> x<%= history.orders[i].items[j].quantity %>
+                        </li>
+                    <% } %>
+                </ul>
+            </div>
+        </div>
+    <%  } %>
+<% } else { %>
+    <h3 class="m-3">No orders made yet.</h3>
+<%  } %>
+
+<% include footer %>
