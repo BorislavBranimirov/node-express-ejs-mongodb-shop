@@ -2,14 +2,9 @@ const nodemailer = require("nodemailer");
 
 const transporter = nodemailer.createTransport({
     service: "gmail",
-    port: 25,
-    secure: false,
     auth: {
         user: process.env.EMAIL,
         pass: process.env.EMAIL_PASS
-    },
-    tls: {
-        rejectUnauthorized: false
     }
 });
 
@@ -27,10 +22,10 @@ exports.mail = {
             to: receiverEmail,
             subject: 'Confirm account activation',
             text: username +
-                ",\nVisit: localhost:8000/verify/activate and input the code: " +
+                ",\nVisit: https://express-ejs-mongo-shop.herokuapp.com/verify/activate and input the code: " +
                 token + " to activate your account.",
             html: username + ",<br>" +
-                "<a href=\"localhost:8000/verify/activate\">Redirect to activate account page</a><br> " +
+                "<a href=\"https://express-ejs-mongo-shop.herokuapp.com/verify/activate\">Redirect to activate account page</a><br> " +
                 "Input the code: <strong>" + token + "</strong> to activate your account."
         }, (err) => {
             if (error) { return next(err); }
@@ -49,10 +44,10 @@ exports.mail = {
             to: receiverEmail,
             subject: 'Request for password reset',
             text: username +
-                ",\nVisit: localhost:8000/verify/passwordReset and input the code: " +
+                ",\nVisit: https://express-ejs-mongo-shop.herokuapp.com/verify/passwordReset and input the code: " +
                 token + " to change your password.",
             html: username + ",<br>" +
-                "<a href=\"localhost:8000/verify/passwordReset\">Redirect to reset password page</a><br> " +
+                "<a href=\"https://express-ejs-mongo-shop.herokuapp.com/verify/passwordReset\">Redirect to reset password page</a><br> " +
                 "Input the code: <strong>" + token + "</strong> to change your password."
         }, (err) => {
             if (error) { return next(err); }
@@ -155,10 +150,10 @@ exports.mail = {
             subject: "Request for email change",
             text: username +
                 ",\nTo confirm change of email to this one go to " +
-                "localhost:8000/user/verify/changeEmail and input the code: " + token +
+                "https://express-ejs-mongo-shop.herokuapp.com/user/verify/changeEmail and input the code: " + token +
                 ".\nIf you were not the one to ask for the change, dont respond and delete this email.",
             html: username + ",<br>" +
-            "<a href=\"localhost:8000/user/verify/changeEmail\">Redirect to change email page</a><br> " +
+            "<a href=\"https://express-ejs-mongo-shop.herokuapp.com/user/verify/changeEmail\">Redirect to change email page</a><br> " +
             "Input the code: <strong>" + token + "</strong> to change your email to this one." +
             " If you were not the one to ask for the change, dont respond and delete this email."
         }, (error, info) => {
@@ -238,10 +233,10 @@ exports.mail = {
             subject: "Confirm account deletion",
             text: username +
                 ",\nTo confirm the deletion of your account visit: " +
-                "localhost:8000/user/verify/delete and input the code: " + token +
+                "https://express-ejs-mongo-shop.herokuapp.com/user/verify/delete and input the code: " + token +
                 " to delete your account.\nIf you were not the one to ask for deletion, contact support.",
             html: username + ",<br>" +
-                "<a href=\"localhost:8000/user/verify/delete\">Redirect to delete account page</a><br> " +
+                "<a href=\"https://express-ejs-mongo-shop.herokuapp.com/user/verify/delete\">Redirect to delete account page</a><br> " +
                 "Input the code: <strong>" + token + "</strong>. " +
                 "If you were not the one to ask for deletion, contact support."
         }, (err) => {
