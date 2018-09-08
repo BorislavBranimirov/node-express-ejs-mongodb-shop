@@ -1,3 +1,3 @@
-exports.User = require("./User.js");
-exports.Item = require("./Item.js");
-exports.History = require("./History.js");
+exports.User = require("./user.js");
+exports.Item = require("./item.js");
+exports.History = require("./history.js");
