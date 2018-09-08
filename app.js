@@ -19,7 +19,7 @@ const { baseRouter, adminRouter, userRouter } = require("./routes")(passport);
 
 //public files
 app.use(express.static(path.join(__dirname, 'public')))
-app.use(favicon(path.join(__dirname, 'public', 'img', 'favicon.ico')))
+app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')))
 
 //method override
 app.use(methodOverride('_method'));
