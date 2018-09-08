@@ -1,7 +1,10 @@
 const nodemailer = require("nodemailer");
 
 const transporter = nodemailer.createTransport({
-    service: "gmail",
+    host: 'smtp.gmail.com',
+    port: 587,
+    secure: true,
+    requireTLS: true,
     auth: {
         user: process.env.EMAIL,
         pass: process.env.EMAIL_PASS
@@ -87,7 +90,8 @@ exports.mail = {
                 ",\nYour name has been changed to " + name +
                 ". If you were not the one to change it, contact support."
         }, (err) => {
-            if (error) { return next(err); }
+            //if (error) { return next(err); }
+            console.log("change|||||||||" + error + process.env.EMAIL+ process.env.EMAIL_PASS);
         });
     },
 
@@ -157,7 +161,7 @@ exports.mail = {
             "Input the code: <strong>" + token + "</strong> to change your email to this one." +
             " If you were not the one to ask for the change, dont respond and delete this email."
         }, (error, info) => {
-            if (error) { return next(error); }
+            if (error) { return next(err); }
         });
 
         transporter.sendMail({
@@ -168,7 +172,7 @@ exports.mail = {
                 ",\nPer your request after confirmation your email will be changed to a new one." +
                 "\nIf you were not the one to ask for email change, contact support."
         }, (error, info) => {
-            if (error) { return next(error); }
+            if (error) { return next(err); }
         });
     },
 
