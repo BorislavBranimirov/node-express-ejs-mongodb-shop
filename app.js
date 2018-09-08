@@ -13,7 +13,7 @@ const app = express();
 app.disable("x-powered-by");
 
 //add imports
-const { ENV, MONGODB_URI, PORT } = require("./config");
+const { ENV, MONGODB_URI, PORT, SESSIONSECRET } = require("./config");
 const setupPassport = require("./passport");
 const { baseRouter, adminRouter, userRouter } = require("./routes")(passport);
 
@@ -52,7 +52,7 @@ app.use(flash());
 
 //passport
 app.use(session({
-    secret: "2#J^zH&&O$",
+    secret: SESSIONSECRET,
     resave: true,
     saveUninitialized: true,
 }));
