@@ -11,9 +11,9 @@ const favicon = require('serve-favicon');
 
 const app = express();
 app.disable("x-powered-by");
+require('dotenv').config();
 
 //add imports
-const { ENV, MONGODB_URI, PORT, SESSIONSECRET } = require("./config");
 const setupPassport = require("./passport");
 const { baseRouter, adminRouter, userRouter } = require("./routes")(passport);
 
@@ -29,12 +29,12 @@ app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 
 //database
-if (ENV === "development") {
+if (process.env.NODE_ENV === "development") {
     mongoose.set("debug", true);
 }
-mongoose.connect(MONGODB_URI, { useNewUrlParser: true })
+mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true })
     .then(() => {
-        console.log("Successfully connected to " + MONGODB_URI);
+        console.log("Successfully connected to " + process.env.MONGODB_URI);
     })
     .catch((err) => {
         console.error(err);
@@ -52,7 +52,7 @@ app.use(flash());
 
 //passport
 app.use(session({
-    secret: SESSIONSECRET,
+    secret: process.env.SESSION_SECRET,
     resave: true,
     saveUninitialized: true,
 }));
@@ -116,6 +116,6 @@ app.use(function (err, req, res, next) {
     }
 });
 
-app.listen(PORT, () => {
-    console.log("Listening on port: " + PORT);
+app.listen(process.env.PORT, () => {
+    console.log("Listening on port: " + process.env.PORT);
 });

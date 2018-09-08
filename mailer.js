@@ -1,14 +1,12 @@
 const nodemailer = require("nodemailer");
 
-const { EMAIL, EMAILPASS } = require("./config");
-
 const transporter = nodemailer.createTransport({
     service: "gmail",
     port: 25,
     secure: false,
     auth: {
-        user: EMAIL,
-        pass: EMAILPASS
+        user: process.env.EMAIL,
+        pass: process.env.EMAIL_PASS
     },
     tls: {
         rejectUnauthorized: false
@@ -25,7 +23,7 @@ exports.mail = {
      */
     activateAccountMail: function (receiverEmail, username, token) {
         transporter.sendMail({
-            from: "'Bori\'s shop' <" + EMAIL + ">",
+            from: "'Bori\'s shop' <" + process.env.EMAIL + ">",
             to: receiverEmail,
             subject: 'Confirm account activation',
             text: username +
@@ -47,7 +45,7 @@ exports.mail = {
      */
     resetPasswordMail: function (receiverEmail, username, token) {
         transporter.sendMail({
-            from: "'Bori\'s shop' <" + EMAIL + ">",
+            from: "'Bori\'s shop' <" + process.env.EMAIL + ">",
             to: receiverEmail,
             subject: 'Request for password reset',
             text: username +
@@ -68,7 +66,7 @@ exports.mail = {
      */
     passwordChangedMail: function (receiverEmail, username) {
         transporter.sendMail({
-            from: "'Bori\'s shop' <" + EMAIL + ">",
+            from: "'Bori\'s shop' <" + process.env.EMAIL + ">",
             to: receiverEmail,
             subject: "Password changed",
             text: username +
@@ -87,7 +85,7 @@ exports.mail = {
      */
     nameChangedMail: function (receiverEmail, username, name) {
         transporter.sendMail({
-            from: "'Bori\'s shop' <" + EMAIL + ">",
+            from: "'Bori\'s shop' <" + process.env.EMAIL + ">",
             to: receiverEmail,
             subject: "Name changed",
             text: username +
@@ -107,8 +105,8 @@ exports.mail = {
      */
     contactMail: function (name, email, subject, messageBody) {
         transporter.sendMail({
-            from: "'Contact form' <" + EMAIL + ">",
-            to: EMAIL,
+            from: "'Contact form' <" + process.env.EMAIL + ">",
+            to: process.env.EMAIL,
             subject: subject,
             text: "name: " + name + "\nemail: " + email + "\nmessage: " + messageBody
         }, (err) => {
@@ -134,7 +132,7 @@ exports.mail = {
         "\nThe following items were out of stock and not placed on the order: " + outOfOrderItemArray
 
         transporter.sendMail({
-            from: "'Bori\'s shop' <" + EMAIL + ">",
+            from: "'Bori\'s shop' <" + process.env.EMAIL + ">",
             to: receiverEmail,
             subject: 'Order has been successfully send',
             text: message
@@ -152,7 +150,7 @@ exports.mail = {
      */
     changeEmailsMail: function (newEmail, oldEmail, username, token) {
         transporter.sendMail({
-            from: "'Bori\'s shop' <" + EMAIL + ">",
+            from: "'Bori\'s shop' <" + process.env.EMAIL + ">",
             to: newEmail,
             subject: "Request for email change",
             text: username +
@@ -168,7 +166,7 @@ exports.mail = {
         });
 
         transporter.sendMail({
-            from: "'Bori\'s shop' <" + EMAIL + ">",
+            from: "'Bori\'s shop' <" + process.env.EMAIL + ">",
             to: oldEmail,
             subject: "Request for email change",
             text: username +
@@ -187,7 +185,7 @@ exports.mail = {
      */
     emailsChangedMail: function (newEmail, oldEmail, username) {
         transporter.sendMail({
-            from: "'Bori\'s shop' <" + EMAIL + ">",
+            from: "'Bori\'s shop' <" + process.env.EMAIL + ">",
             to: newEmail,
             subject: "Email changed",
             text: username +
@@ -197,7 +195,7 @@ exports.mail = {
         });
 
         transporter.sendMail({
-            from: "'Bori\'s shop' <" + EMAIL + ">",
+            from: "'Bori\'s shop' <" + process.env.EMAIL + ">",
             to: oldEmail,
             subject: "Email changed",
             text: username +
@@ -215,7 +213,7 @@ exports.mail = {
      */
     accountDeactivatedMail: function (receiverEmail, username) {
         transporter.sendMail({
-            from: "'Bori\'s shop' <" + EMAIL + ">",
+            from: "'Bori\'s shop' <" + process.env.EMAIL + ">",
             to: receiverEmail,
             subject: "Account deactivated",
             text: username +
@@ -235,7 +233,7 @@ exports.mail = {
      */
     deleteAccountMail: function (receiverEmail, username, token) {
         transporter.sendMail({
-            from: "'Bori\'s shop' <" + EMAIL + ">",
+            from: "'Bori\'s shop' <" + process.env.EMAIL + ">",
             to: receiverEmail,
             subject: "Confirm account deletion",
             text: username +
@@ -258,7 +256,7 @@ exports.mail = {
      */
     accountDeletedMail: function (receiverEmail, username) {
         transporter.sendMail({
-            from: "'Bori\'s shop' <" + EMAIL + ">",
+            from: "'Bori\'s shop' <" + process.env.EMAIL + ">",
             to: receiverEmail,
             subject: "Account deleted",
             text: username +
