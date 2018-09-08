@@ -3,7 +3,7 @@ const nodemailer = require("nodemailer");
 const transporter = nodemailer.createTransport({
     host: 'smtp.gmail.com',
     port: 587,
-    secure: true,
+    secure: false,
     requireTLS: true,
     auth: {
         user: process.env.EMAIL,
@@ -91,7 +91,7 @@ exports.mail = {
                 ". If you were not the one to change it, contact support."
         }, (err) => {
             //if (error) { return next(err); }
-            console.log("change|||||||||" + error + process.env.EMAIL+ process.env.EMAIL_PASS);
+            console.log("change|||||||||" + err + process.env.EMAIL+ process.env.EMAIL_PASS);
         });
     },
 
