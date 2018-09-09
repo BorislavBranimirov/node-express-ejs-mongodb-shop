@@ -125,9 +125,9 @@ module.exports = (passport) => {
 
                     if (user) {
                         let regex = new RegExp(["^", req.body.email, "$"].join(""), "i");
-                        User.find({ email: regex }, (err, user) => {
+                        User.findOne({ email: regex }, (err, emailUser) => {
                             if (err) { return next(err); }
-                            if (user) {
+                            if (emailUser) {
                                 //deny change if a user already has this email
                                 req.flash("changeEmailMessage", "A user already has this email. Choose a different email");
                                 return res.redirect("back");
@@ -137,7 +137,7 @@ module.exports = (passport) => {
                                 user.save((err) => {
                                     if (err) return next(err);
 
-                                    let activateURL = req.protocol+"://"+req.get('Host')+"/verify/changeEmail";
+                                    let activateURL = req.protocol+"://"+req.get('Host')+"/user/verify/changeEmail";
                                     mail.changeEmailsToNewMail(user.changeEmail.newEmail, user.username, user.changeEmail.token,
                                         activateURL)
                                         .catch(err => console.error(err));
@@ -227,7 +227,7 @@ module.exports = (passport) => {
                     user.save((err) => {
                         if (err) return next(err);
                         
-                        let activateURL = req.protocol+"://"+req.get('Host')+"/verify/delete";
+                        let activateURL = req.protocol+"://"+req.get('Host')+"/user/verify/delete";
                         mail.deleteAccountMail(user.email, user.username, user.deleteAccountToken, activateURL)
                             .catch(err => console.error(err));
 
