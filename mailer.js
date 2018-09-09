@@ -17,8 +17,9 @@ exports.mail = {
      * @param {string} receiverEmail
      * @param {string} username
      * @param {string} token - activation token
+     * @param {string} activateURL - redirect URL to input confirmation code at
      */
-    activateAccountMail: function (receiverEmail, username, token, redirectURL) {
+    activateAccountMail: function (receiverEmail, username, token, activateURL) {
         return new Promise(function (resolve, reject) {
             transporter.sendMail({
                 from: "'Bori\'s shop' <" + process.env.EMAIL + ">",
@@ -43,18 +44,19 @@ exports.mail = {
      * @param {string} receiverEmail
      * @param {string} username
      * @param {string} token - password reset token
+     * @param {string} activateURL - redirect URL to input confirmation code at
      */
-    resetPasswordMail: function (receiverEmail, username, token) {
+    resetPasswordMail: function (receiverEmail, username, token, activateURL) {
         return new Promise(function (resolve, reject) {
             transporter.sendMail({
                 from: "'Bori\'s shop' <" + process.env.EMAIL + ">",
                 to: receiverEmail,
                 subject: 'Request for password reset',
                 text: username +
-                    ",\nVisit: https://express-ejs-mongo-shop.herokuapp.com/verify/passwordReset and input the code: " +
+                    ",\nVisit: " + activateURL +" and input the code: " +
                     token + " to change your password.",
                 html: username + ",<br>" +
-                    "<a href=\"https://express-ejs-mongo-shop.herokuapp.com/verify/passwordReset\">Redirect to reset password page</a><br> " +
+                    "<a href=\"" + activateURL + "\">Redirect to reset password page</a><br> " +
                     "Input the code: <strong>" + token + "</strong> to change your password."
             }, (err, info) => {
                 if (err) {
@@ -179,19 +181,20 @@ exports.mail = {
      * @param {string} newEmail
      * @param {string} username
      * @param {string} token - email change token
+     * @param {string} activateURL - redirect URL to input confirmation code at
      */
-    changeEmailsToNewMail: function (newEmail, username, token) {
+    changeEmailsToNewMail: function (newEmail, username, token, activateURL) {
         return new Promise(function (resolve, reject) {
             transporter.sendMail({
                 from: "'Bori\'s shop' <" + process.env.EMAIL + ">",
                 to: newEmail,
                 subject: "Request for email change",
                 text: username +
-                    ",\nTo confirm change of email to this one go to " +
-                    "https://express-ejs-mongo-shop.herokuapp.com/user/verify/changeEmail and input the code: " + token +
+                    ",\nTo confirm change of email to this one go to " + activateURL +
+                    " and input the code: " + token +
                     ".\nIf you were not the one to ask for the change, dont respond and delete this email.",
                 html: username + ",<br>" +
-                    "<a href=\"https://express-ejs-mongo-shop.herokuapp.com/user/verify/changeEmail\">Redirect to change email page</a><br> " +
+                    "<a href=\"" + activateURL + "\">Redirect to change email page</a><br> " +
                     "Input the code: <strong>" + token + "</strong> to change your email to this one." +
                     " If you were not the one to ask for the change, dont respond and delete this email."
             }, (err, info) => {
@@ -305,8 +308,9 @@ exports.mail = {
      * @param {string} receiverEmail
      * @param {string} username
      * @param {string} token - delete account token
+     * @param {string} activateURL - redirect URL to input confirmation code at
      */
-    deleteAccountMail: function (receiverEmail, username, token) {
+    deleteAccountMail: function (receiverEmail, username, token, activateURL) {
         return new Promise(function (resolve, reject) {
             transporter.sendMail({
                 from: "'Bori\'s shop' <" + process.env.EMAIL + ">",
@@ -314,10 +318,10 @@ exports.mail = {
                 subject: "Confirm account deletion",
                 text: username +
                     ",\nTo confirm the deletion of your account visit: " +
-                    "https://express-ejs-mongo-shop.herokuapp.com/user/verify/delete and input the code: " + token +
+                    activateURL + " and input the code: " + token +
                     " to delete your account.\nIf you were not the one to ask for deletion, contact support.",
                 html: username + ",<br>" +
-                    "<a href=\"https://express-ejs-mongo-shop.herokuapp.com/user/verify/delete\">Redirect to delete account page</a><br> " +
+                    "<a href=\"" + activateURL + "\">Redirect to delete account page</a><br> " +
                     "Input the code: <strong>" + token + "</strong>. " +
                     "If you were not the one to ask for deletion, contact support."
             }, (err, info) => {

@@ -137,7 +137,9 @@ module.exports = (passport) => {
                                 user.save((err) => {
                                     if (err) return next(err);
 
-                                    mail.changeEmailsToNewMail(user.changeEmail.newEmail, user.username, user.changeEmail.token)
+                                    let activateURL = req.protocol+"://"+req.get('Host')+"/verify/changeEmail";
+                                    mail.changeEmailsToNewMail(user.changeEmail.newEmail, user.username, user.changeEmail.token,
+                                        activateURL)
                                         .catch(err => console.error(err));
 
                                     mail.changeEmailsToOldMail(user.email, user.username)
@@ -225,7 +227,8 @@ module.exports = (passport) => {
                     user.save((err) => {
                         if (err) return next(err);
                         
-                        mail.deleteAccountMail(user.email, user.username, user.deleteAccountToken)
+                        let activateURL = req.protocol+"://"+req.get('Host')+"/verify/delete";
+                        mail.deleteAccountMail(user.email, user.username, user.deleteAccountToken, activateURL)
                             .catch(err => console.error(err));
 
                         req.flash("deleteAccMessage", "Email has been sent to confirm account deletion.");

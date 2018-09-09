@@ -42,7 +42,8 @@ module.exports = function (passport) {
 
                     User.create(obj)
                         .then((user) => {
-                            mail.activateAccountMail(obj.email, user.username, user.activationToken)
+                            let activateURL = req.protocol+"://"+req.get('Host')+"/verify/activate";
+                            mail.activateAccountMail(obj.email, user.username, user.activationTokenm, activateURL)
                                 .catch(err => console.error(err));
 
                             req.flash("verifyActivationMessage", "Activate your account with the code from your email to log in")
@@ -133,8 +134,8 @@ module.exports = function (passport) {
                         user.save((err) => {
                             if (err) { return next(err); }
 
-                            let redirectURL = req.protocol+"://"+req.get('Host')+"/verify/activate";
-                            mail.activateAccountMail(user.email, user.username, user.activationToken, redirectURL)
+                            let activateURL = req.protocol+"://"+req.get('Host')+"/verify/activate";
+                            mail.activateAccountMail(user.email, user.username, user.activationToken, activateURL)
                                 .catch(err => console.error(err));
 
                             req.flash("verifyActivationMessage", "Activate your account with the code from the email");
@@ -167,7 +168,8 @@ module.exports = function (passport) {
                     user.save((err) => {
                         if (err) { return next(err); }
 
-                        mail.resetPasswordMail(user.email, user.username, user.lostPassToken)
+                        let activateURL = req.protocol+"://"+req.get('Host')+"/verify/passwordReset";
+                        mail.resetPasswordMail(user.email, user.username, user.lostPassToken, activateURL)
                             .catch(err => console.error(err));
 
                         req.flash("resetPasswordMessage", "Activate your account with the code from the email");
