@@ -61,7 +61,8 @@ module.exports = (passport) => {
                             outOfStockNames: outOfStockitemArray 
                         });
 
-                        mail.checkoutMail(user.email, itemObjectArray, outOfStockitemArray);
+                        mail.checkoutMail(user.email, itemObjectArray, outOfStockitemArray)
+                            .catch(err => console.error(err));
 
                         History.findOne({_userId: req.user._id}, (err, history) => {
                             if (err) return next(err);
@@ -128,7 +129,11 @@ module.exports = (passport) => {
                         user.save((err) => {
                             if (err) return next(err);
 
-                            mail.changeEmailsMail(user.changeEmail.newEmail, user.email, user.username, user.changeEmail.token);
+                            mail.changeEmailsToNewMail(user.changeEmail.newEmail, user.username, user.changeEmail.token)
+                                .catch(err => console.error(err));
+
+                            mail.changeEmailsToOldMail(user.email, user.username)
+                                .catch(err => console.error(err));
 
                             req.flash("verifyChangeEmailMessage", "Input code from your new email to confirm change.");
                             res.redirect("/user/verify/changeEmail");
@@ -162,7 +167,11 @@ module.exports = (passport) => {
                         user.save((err) => {
                             if (err) return next(err);
 
-                            mail.emailsChangedMail(user.email, oldEmail, user.username);
+                            mail.emailsChangedToNewMail(user.email, user.username)
+                                .catch(err => console.error(err));
+
+                            mail.emailsChangedToOldMail(oldEmail, user.username)
+                                .catch(err => console.error(err));
 
                             req.flash("loginMessage", "Email updated successfully");
                             res.redirect("/login");
@@ -185,7 +194,8 @@ module.exports = (passport) => {
                     user.save((err) => {
                         if (err) { return next(err); }
 
-                        mail.accountDeactivatedMail(user.email, user.username);
+                        mail.accountDeactivatedMail(user.email, user.username)
+                            .catch(err => console.error(err));
 
                         req.logout();
     
@@ -205,7 +215,8 @@ module.exports = (passport) => {
                     user.save((err) => {
                         if (err) return next(err);
                         
-                        mail.deleteAccountMail(user.email, user.username, user.deleteAccountToken);
+                        mail.deleteAccountMail(user.email, user.username, user.deleteAccountToken)
+                            .catch(err => console.error(err));
 
                         req.flash("deleteAccMessage", "Email has been sent to confirm account deletion.");
                         res.redirect("verify/delete");
@@ -230,7 +241,8 @@ module.exports = (passport) => {
                 User.findOneAndRemove({ $and: [{ _id: req.user._id}, { deleteAccountToken: req.body.code}] }, (err , user) => {
                     if (err) return next(err);
                     if (user) {
-                        mail.accountDeletedMail(email, username);
+                        mail.accountDeletedMail(email, username)
+                            .catch(err => console.error(err));
 
                         req.flash("loginMessage", "Account successfully deleted");
                         res.redirect("/login");
@@ -274,7 +286,8 @@ module.exports = (passport) => {
                                     user.save((err) => {
                                         if (err) return next(err);
 
-                                        mail.passwordChangedMail(user.email, user.username);
+                                        mail.passwordChangedMail(user.email, user.username)
+                                            .catch(err => console.error(err));
 
                                         res.redirect(req.user.username);
                                     });
@@ -308,7 +321,8 @@ module.exports = (passport) => {
                         user.save((err) => {
                             if (err) return next(err);
 
-                            mail.nameChangedMail(user.email, user.username, user.realName);
+                            mail.nameChangedMail(user.email, user.username, user.realName)
+                                .catch(err => console.error(err));
                             
                             res.redirect(req.user.username);
                         });

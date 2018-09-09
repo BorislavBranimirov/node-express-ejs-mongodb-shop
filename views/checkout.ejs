@@ -12,8 +12,8 @@
                     <%= sentItems[i].itemName %> x<%= sentItems[i].quantity %>, 
                 <% } %>
                     <%= sentItems[sentItems.length - 1].itemName %> x<%= sentItems[sentItems.length - 1].quantity %>
-                <hr>
                 <% if (outOfStockNames.length > 0) { %>
+                    <hr>
                     The following items were out of stock, and therefore not placed on the order:<br>
                     <% for (let i = 0; i < outOfStockNames.length; i++) { %>
                         <%= outOfStockNames[i] %>

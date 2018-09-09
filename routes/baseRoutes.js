@@ -42,7 +42,8 @@ module.exports = function (passport) {
 
                     User.create(obj)
                         .then((user) => {
-                            mail.activateAccountMail(obj.email, user.username, user.activationToken);
+                            mail.activateAccountMail(obj.email, user.username, user.activationToken)
+                                .catch(err => console.error(err));
 
                             req.flash("verifyActivationMessage", "Activate your account with the code from your email to log in")
                             res.redirect("/verify/activate");
@@ -114,7 +115,7 @@ module.exports = function (passport) {
             res.render("sendEmail", {
                 msg: req.flash("reactivateAccMessage"),
                 text: "Enter the email connected to your unactivated account.",
-                path: "/reactivateAccount"
+                path: "/reactivateAccount?_method=patch"
             });
         })
         .patch((req, res, next) => {
@@ -132,7 +133,8 @@ module.exports = function (passport) {
                         user.save((err) => {
                             if (err) { return next(err); }
 
-                            mail.activateAccountMail(user.email, user.username, user.activationToken);
+                            mail.activateAccountMail(user.email, user.username, user.activationToken)
+                                .catch(err => console.error(err));
 
                             req.flash("verifyActivationMessage", "Activate your account with the code from the email");
                             res.redirect("/verify/activate");
@@ -164,7 +166,8 @@ module.exports = function (passport) {
                     user.save((err) => {
                         if (err) { return next(err); }
 
-                        mail.resetPasswordMail(user.email, user.username, user.lostPassToken);
+                        mail.resetPasswordMail(user.email, user.username, user.lostPassToken)
+                            .catch(err => console.error(err));
 
                         req.flash("resetPasswordMessage", "Activate your account with the code from the email");
                         res.redirect("/verify/passwordReset");
@@ -202,7 +205,8 @@ module.exports = function (passport) {
                                 user.save((err) => {
                                     if (err) return next(err);
 
-                                    mail.passwordChangedMail(user.email, user.username);
+                                    mail.passwordChangedMail(user.email, user.username)
+                                        .catch(err => console.error(err));
 
                                     req.flash("loginMessage", "Password reset")
                                     res.redirect("/login");
@@ -227,7 +231,8 @@ module.exports = function (passport) {
             res.render("contact", { msg: req.flash("contactMessage") });
         })
         .post((req, res, next) => {
-            mail.contactMail(req.body.realName, req.body.email, req.body.subject, req.body.message);
+            mail.contactMail(req.body.realName, req.body.email, req.body.subject, req.body.message)
+                .catch(err => console.error(err));
 
             res.redirect("back");
         });
