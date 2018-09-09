@@ -25,9 +25,9 @@ exports.mail = {
                 from: "'Bori\'s shop' <" + process.env.EMAIL + ">",
                 to: receiverEmail,
                 subject: 'Confirm account activation',
-                text: username + ",\nVisit: " + redirectURL + " and input the code: " +
+                text: username + ",\nVisit: " + activateURL + " and input the code: " +
                     token + " to activate your account.",
-                html: username + ",<br>" + "<a href=\"" + redirectURL +"\">Redirect to activate account page</a><br> " +
+                html: username + ",<br>" + "<a href=\"" + activateURL +"\">Redirect to activate account page</a><br> " +
                     "Input the code: <strong>" + token + "</strong> to activate your account."
             }, (err, info) => {
                 if (err) {
