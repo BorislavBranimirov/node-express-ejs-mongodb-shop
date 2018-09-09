@@ -18,17 +18,15 @@ exports.mail = {
      * @param {string} username
      * @param {string} token - activation token
      */
-    activateAccountMail: function (receiverEmail, username, token) {
+    activateAccountMail: function (receiverEmail, username, token, redirectURL) {
         return new Promise(function (resolve, reject) {
             transporter.sendMail({
                 from: "'Bori\'s shop' <" + process.env.EMAIL + ">",
                 to: receiverEmail,
                 subject: 'Confirm account activation',
-                text: username + " " + req.protocol+"://"+req.get('Host')+"/verify/activate" +
-                    ",\nVisit: https://express-ejs-mongo-shop.herokuapp.com/verify/activate and input the code: " +
+                text: username + ",\nVisit: " + redirectURL + " and input the code: " +
                     token + " to activate your account.",
-                html: username + ",<br>" +
-                    "<a href=\"https://express-ejs-mongo-shop.herokuapp.com/verify/activate\">Redirect to activate account page</a><br> " +
+                html: username + ",<br>" + "<a href=\"" + redirectURL +"\">Redirect to activate account page</a><br> " +
                     "Input the code: <strong>" + token + "</strong> to activate your account."
             }, (err, info) => {
                 if (err) {

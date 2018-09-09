@@ -133,7 +133,8 @@ module.exports = function (passport) {
                         user.save((err) => {
                             if (err) { return next(err); }
 
-                            mail.activateAccountMail(user.email, user.username, user.activationToken)
+                            let redirectURL = req.protocol+"://"+req.get('Host')+"/verify/activate";
+                            mail.activateAccountMail(user.email, user.username, user.activationToken, redirectURL)
                                 .catch(err => console.error(err));
 
                             req.flash("verifyActivationMessage", "Activate your account with the code from the email");
