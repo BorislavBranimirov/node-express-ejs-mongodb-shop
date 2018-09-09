@@ -24,7 +24,7 @@ exports.mail = {
                 from: "'Bori\'s shop' <" + process.env.EMAIL + ">",
                 to: receiverEmail,
                 subject: 'Confirm account activation',
-                text: username +
+                text: username + " " + req.protocol+"://"+req.get('Host')+"/verify/activate" +
                     ",\nVisit: https://express-ejs-mongo-shop.herokuapp.com/verify/activate and input the code: " +
                     token + " to activate your account.",
                 html: username + ",<br>" +

@@ -124,19 +124,29 @@ module.exports = (passport) => {
                     if (err) return next(err);
 
                     if (user) {
-                        user.changeEmail.token = randomstring.generate(20);
-                        user.changeEmail.newEmail = req.body.email;
-                        user.save((err) => {
-                            if (err) return next(err);
+                        let regex = new RegExp(["^", req.body.email, "$"].join(""), "i");
+                        User.find({ email: regex }, (err, user) => {
+                            if (err) { return next(err); }
+                            if (user) {
+                                //deny change if a user already has this email
+                                req.flash("changeEmailMessage", "A user already has this email. Choose a different email");
+                                return res.redirect("back");
+                            } else {
+                                user.changeEmail.token = randomstring.generate(20);
+                                user.changeEmail.newEmail = req.body.email;
+                                user.save((err) => {
+                                    if (err) return next(err);
 
-                            mail.changeEmailsToNewMail(user.changeEmail.newEmail, user.username, user.changeEmail.token)
-                                .catch(err => console.error(err));
+                                    mail.changeEmailsToNewMail(user.changeEmail.newEmail, user.username, user.changeEmail.token)
+                                        .catch(err => console.error(err));
 
-                            mail.changeEmailsToOldMail(user.email, user.username)
-                                .catch(err => console.error(err));
+                                    mail.changeEmailsToOldMail(user.email, user.username)
+                                        .catch(err => console.error(err));
 
-                            req.flash("verifyChangeEmailMessage", "Input code from your new email to confirm change.");
-                            res.redirect("/user/verify/changeEmail");
+                                    req.flash("verifyChangeEmailMessage", "Input code from your new email to confirm change.");
+                                    res.redirect("/user/verify/changeEmail");
+                                });
+                            }
                         });
                     } else {
                         res.status(500);
