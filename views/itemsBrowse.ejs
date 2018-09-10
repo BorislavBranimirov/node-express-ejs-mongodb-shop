@@ -90,7 +90,7 @@
                     <a class="page-link">&hellip;</a>
                 </li>
             <% } else { %>
-                <% if (filterObject.page === i + 1) { %>
+                <% if (filterObject.page === pagesArray[i]) { %>
                     <li class="page-item active">
                         <a class="page-link" data-page="<%= pagesArray[i] %>"><%= pagesArray[i] %></a>
                     </li>
