@@ -242,17 +242,62 @@ module.exports = function (passport) {
 
     router.route("/browse")
         .get((req, res, next) => {
-            Item.find({}, (err, items) => {
-                if (err) { return next(err); }
+            //default values to use if some filter is not set or not correct type
+            let defaults = {
+                page: 1,
+                count: 4,
+                sortCategory: "Name",
+                sortOrder: "Ascending",
+                priceMin: 0,
+                priceMax: 20,
+                search: ""
+            }
 
-                //default values to use if some filter is not set or not correct type
-                let defaults = {
-                    page: 1,
-                    count: 4,
-                    priceMin: 0,
-                    priceMax: 20,
-                    search: ""
-                }
+            //sorting object
+            //in mongodb ascending is 1, descending is -1
+            //sort category/order is hardcoded, as having options written as "itemName/price/1/-1" is unpleasant for users
+            let sortCategory = req.query.sortCategory || defaults.sortCategory;
+            let sortOrder = req.query.sortOrder || defaults.sortOrder;
+            let dbSortObject = {};
+            if (sortCategory === "Name") {
+                dbSortObject["itemName"] = (sortOrder === "Ascending") ? 1 : -1;
+            }
+            if (sortCategory === "Price") {
+                dbSortObject["price"] = (sortOrder === "Ascending") ? 1 : -1;
+            }
+
+            //minimum price value for filtered items
+            let priceMin = Number(req.query.priceMin) || defaults.priceMin;
+
+            //maximum price value for filtered items
+            let priceMax = Number(req.query.priceMax) || defaults.priceMax;
+
+            //search item regardless of capitalisation
+            //but pass the normal search string back to ejs
+            let search = req.query.search || defaults.search
+            let searchRegex = new RegExp([req.query.search].join(""), "i");
+
+            //inStock check status
+            //if no queries, i.e entered route as just "/browse", or inStock is checked set to true
+            //otherwise filterObject proporty-false, and 'checked' not set in ejs page
+            let inStock = (Object.keys(req.query).length === 0 || req.query.inStock) ? true : false;
+
+            //query object
+            let dbQueryObject = {};
+
+            //price uses the formula from the item model(the price saved in db is multiplied by 100)
+            dbQueryObject.price = { $gte: Number((priceMin * 100).toFixed(0)), $lte: Number((priceMax * 100).toFixed(0))};
+
+            //query only objects with names that match regex
+            dbQueryObject.itemName = searchRegex;
+
+            //query only objects that match inStock boolean
+            dbQueryObject.inStock = inStock;
+
+            Item.find(dbQueryObject)
+            .sort(dbSortObject)
+            .exec((err, items) => {
+                if (err) { return next(err); }
 
                 //number of items per page
                 let count = parseInt(req.query.count) || defaults.count;
@@ -263,43 +308,37 @@ module.exports = function (passport) {
                 //starting index in item array
                 let startingIndex = (page-1)*count;
 
-                //minimum price value for filtered items
-                let priceMin = Number(req.query.priceMin) || defaults.priceMin;
-
-                //maximum price value for filtered items
-                let priceMax = Number(req.query.priceMax) || defaults.priceMax;
-
-                //search item regardless of capitalisation
-                //but pass the normal search string back to ejs
-                let search = req.query.search || defaults.search
-                let searchRegex = new RegExp([req.query.search].join(""), "i");
-
-                //filter items array
-                items = items.filter((item) => {
-                    return (item.price >= priceMin && item.price <= priceMax && searchRegex.test(item.itemName)) 
-                });
-
                 //max number of pages there can be with the set count query
                 let numberOfPages = Math.ceil(items.length/count);
 
                 //get items only for current page
                 items = items.slice(startingIndex, startingIndex + count);
 
-
                 //filter info to fill html page's filter inputs
                 let filterObject = {
                     page: page,
                     search: search,
                     count: count,
+                    sortCategory: sortCategory,
+                    sortOrder: sortOrder,
                     priceMin: priceMin,
-                    priceMax: priceMax
+                    priceMax: priceMax,
+                    inStock: inStock
                 }
 
                 //set a query string - path+queries (!!for use in ejs file!!)
+                //if inStock is false, don't set in string(as that is a checkbox's default behaviour)
+                //if its true, set it as "on"(as that is a checkbox's default behaviour)
                 let queryString="/browse?";
                 for (let property in filterObject) {
                     if (filterObject.hasOwnProperty(property)) {
-                        queryString += property + "=" + filterObject[property] + "&"
+                        if (property !== "inStock") {
+                            queryString += property + "=" + filterObject[property] + "&";
+                        } else {
+                            if(filterObject.inStock) {
+                                queryString += property + "=on&";
+                            }
+                        }
                     }
                 }
                 queryString=queryString.slice(0, -1);
