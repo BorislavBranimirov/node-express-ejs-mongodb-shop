@@ -240,7 +240,7 @@ module.exports = function (passport) {
             res.redirect("back");
         });
 
-    router.route("/itempage")
+    router.route("/browse")
         .get((req, res, next) => {
             Item.find({}, (err, items) => {
                 if (err) { return next(err); }
@@ -296,7 +296,7 @@ module.exports = function (passport) {
                 }
 
                 //set a query string - path+queries (!!for use in ejs file!!)
-                let queryString="/itempage?";
+                let queryString="/browse?";
                 for (let property in filterObject) {
                     if (filterObject.hasOwnProperty(property)) {
                         queryString += property + "=" + filterObject[property] + "&"
@@ -308,7 +308,7 @@ module.exports = function (passport) {
                 //second parameter is the max number of pages in pagination
                 let pagesArray = helperFunctions.getPagesArray(page, 9, numberOfPages);
 
-                res.render("itemPage", {
+                res.render("itemsBrowse", {
                     msg: req.flash("itemMessage"),
                     itemArray: items,
                     filterObject: filterObject,
