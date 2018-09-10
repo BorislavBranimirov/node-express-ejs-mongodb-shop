@@ -18,9 +18,12 @@ body {
     flex-shrink: 0;
 }
 
-.card-img-top {
-    height: 250px;
-    width: auto;
+.item-page-card {
+    height: 400px;
+}
+
+.item-page-card > .card-text {
+    overflow: auto;
 }
 
 .item-image {

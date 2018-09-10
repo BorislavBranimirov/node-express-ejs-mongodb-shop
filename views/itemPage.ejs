@@ -51,11 +51,7 @@
             <div class="row">
                 <% for(let i = 0; i < itemArray.length; i++) { %>
                     <div class="col-sm-6 col-md-4 col-lg-3 py-3">
-                        <div class="card h-100">
-                            <img class="card-img-top"
-                                src="<%= '/img/' + itemArray[i].itemName.toLowerCase() + '.jpeg' %>"
-                                alt="<%= itemArray[i].itemName %>">
-                            <div class="card-body text-center d-flex flex-column">
+                        <div class="card item-page-card card-body d-flex flex-column">
                                 <a href="/item/<%= itemArray[i]._id %>/<%= itemArray[i].itemName %>">
                                     <h2 class="card-title"><%= itemArray[i].itemName %></h2>
                                 </a>
@@ -71,12 +67,11 @@
                                         <div class="form-group">
                                             <input class="form-control quantity" type="number" name="quantity" min="1" value="1">
                                         </div>
-                                        <div class="form-group">
+                                        <div class="form-group text-center">
                                             <input class="btn btn-primary" type="submit" value="Add to cart">
                                         </div>
                                     </form>
                                 </div>
-                            </div>
                         </div>
                     </div>
                 <% } %>

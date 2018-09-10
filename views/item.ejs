@@ -5,12 +5,11 @@
         <div class="card-header">
             <h3><%= item.itemName %></h3>
         </div>
-    <div class="row">
-        <img class="item-image col-md-6 item-picture" src="<%= '/img/' + item.itemName.toLowerCase() + '.jpeg' %>"
-            alt="<%= item.itemName %>"> <br>
-        <div class="col-md-6 d-flex flex-column pt-2 pr-5">
-            <%= item.description %><br>
-            <p class="mt-auto">
+        <div class="pt-2 px-4">
+            <p class="lead text-center">
+                <%= item.description %>
+            </p>
+            <p>
                 <%= item.fullPrice %> <br>
                 <%= (item.inStock) ? "In stock" : "Out of stock" %>
             </p>
@@ -25,7 +24,6 @@
                 </div>
             </form>
         </div>
-    </div>
     </div>
 </div>
 <% include footer %>
