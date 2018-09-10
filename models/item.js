@@ -18,7 +18,7 @@ const itemSchema = new mongoose.Schema({
 
 itemSchema.virtual("fullPrice")
     .get(function () {
-        return this.price + this.pricePer + " USD";
+        return this.price.toFixed(2) + this.pricePer + " USD";
     });
 
 /**
