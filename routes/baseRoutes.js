@@ -289,10 +289,10 @@ module.exports = function (passport) {
                 //filter info to fill html page's filter inputs
                 let filterObject = {
                     page: page,
+                    search: search,
                     count: count,
                     priceMin: priceMin,
-                    priceMax: priceMax,
-                    search: search
+                    priceMax: priceMax
                 }
 
                 //set a query string - path+queries (!!for use in ejs file!!)
