@@ -43,7 +43,7 @@ module.exports = function (passport) {
                     User.create(obj)
                         .then((user) => {
                             let activateURL = req.protocol+"://"+req.get('Host')+"/verify/activate";
-                            mail.activateAccountMail(obj.email, user.username, user.activationTokenm, activateURL)
+                            mail.activateAccountMail(obj.email, user.username, user.activationToken, activateURL)
                                 .catch(err => console.error(err));
 
                             req.flash("verifyActivationMessage", "Activate your account with the code from your email to log in")
