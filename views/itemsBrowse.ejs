@@ -4,8 +4,8 @@
         <nav class="col-12 col-lg-2 py-3">
             <form action="/browse" method="GET">
                 <div class="form-group">
-                        <input class="form-control" type="text" name="search" id="search"
-                            placeholder="Search..." value="<%= filterObject.search %>">
+                    <input class="form-control" type="text" name="search" id="search"
+                        placeholder="Search..." value="<%= filterObject.search %>">
                 </div>
 
                 <label class="text-muted" for="count">Number of items per page:</label>
@@ -18,7 +18,7 @@
                 <%# if writing options by hand with no loop you would need to know the index of sent option, %>
                 <%# as you can't check what option to have selected before you write it %>
                 <%# optiontag if(text===filterObject.sortCategory) text /optiontag %>
-                <%# psudo code for example ^ won't work as text wouldn't be set in if condition%>
+                <%# psudo code for example ^ won't work as text wouldn't be set in if condition %>
                 <label class="text-muted" for="sortCategory">Sort by:</label>
                 <div class="form-group">
                     <% let sortCategoryArr = ["Name", "Price"]; %>
@@ -63,7 +63,7 @@
                             min="<%= defaults.priceMin %>" max="<%= defaults.priceMax %>"
                             oninput="printSliderValue(this.value, document.getElementById('priceMaxText'))">
                         <input class="form-control col-3" type="text" id="priceMaxText" value="<%= filterObject.priceMax %>"
-                                onchange="changeSliderValue(this.value, document.getElementById('priceMax'))">
+                            onchange="changeSliderValue(this.value, document.getElementById('priceMax'))">
                     </div>
                 </div>
 
@@ -97,7 +97,8 @@
                                         <%= itemArray[i].fullPrice %> <br>
                                         In stock: <%= (itemArray[i].inStock) ? "yes" : "no" %> <br>
                                     </p>
-                                    <form action="/item/<%= itemArray[i]._id %>/<%= itemArray[i].itemName %>?_method=patch" method="post">
+                                    <form action="/item/<%= itemArray[i]._id %>/<%= itemArray[i].itemName %>?_method=patch"
+                                        method="post">
                                         <div class="form-group">
                                             <input class="form-control quantity" type="number" name="quantity" min="1" value="1">
                                         </div>
