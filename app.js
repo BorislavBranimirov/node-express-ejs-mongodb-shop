@@ -61,7 +61,7 @@ app.use(passport.session());
 setupPassport(passport);
 
 //routers
-app.use(function(req, res, next){
+app.use(function (req, res, next) {
     //expore req.user to view files
     res.locals.user = req.user;
     next();
@@ -77,13 +77,13 @@ app.use(function (req, res, next) {
 //permission
 app.set('permission', {
     after: (req, res, next, authorizedStatus) => {
-        if(authorizedStatus === "notAuthorized") {
+        if (authorizedStatus === "notAuthorized") {
             res.status(403);
-            return next(new Error( "User not Authorized to access page"));
+            return next(new Error("User not Authorized to access page"));
         }
-        if(authorizedStatus === "notAuthenticated") {
+        if (authorizedStatus === "notAuthenticated") {
             res.status(401);
-            return next(new Error( "User not authenticated"));
+            return next(new Error("User not authenticated"));
         }
         return next();
     }
@@ -116,6 +116,7 @@ app.use(function (err, req, res, next) {
     }
 });
 
-app.listen(process.env.PORT, () => {
+const port = process.env.PORT || 8000;
+app.listen(port, () => {
     console.log("Listening on port: " + process.env.PORT);
 });
